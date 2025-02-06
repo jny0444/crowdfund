@@ -13,10 +13,11 @@ contract CrowdFunding {
         uint256 deadline;
         uint256 balance;
         address[] contributors;
-        mapping(address => uint256) contributions;
+        bool ended;
     }
 
     mapping (uint256 => Campaign) public campaigns;
+    mapping(uint256 => mapping(address => uint256)) public contributions;
     // mapping (uint256 => address[]) public contributors;
 
     event CampaignCreated(address indexed owner, string description, uint256 goal, uint256 deadline);
@@ -29,32 +30,44 @@ contract CrowdFunding {
         uint256 _deadline
     ) public {
         totalCampaigns++;
-        Campaign storage newCampaign = campaigns[totalCampaigns];
-        newCampaign.owner = msg.sender;
-        newCampaign.description = _description;
-        newCampaign.goal = _goal;
-        newCampaign.deadline = _deadline;
-        newCampaign.balance = 0;
+        campaigns[totalCampaigns] = Campaign({
+            owner: msg.sender,
+            description: _description,
+            goal: _goal,
+            deadline: _deadline,
+            balance: 0,
+            contributors: new address[](0),
+            ended: false
+        });
 
         emit CampaignCreated(msg.sender, _description, _goal, _deadline);
     }
 
-    function fundCampaign(uint256 _campaignId) public payable {
+    function fundCampaign(uint256 _campaignId, uint256 _amount) public {
         if(msg.value == 0) {
             revert AmountTooLess();
         }
-        Campaign storage campaign = campaigns[_campaignId];
-        (bool success, ) = campaign.owner.call{value: msg.value}("");
 
-        if(success) {
-            campaign.balance += msg.value;
+        Campaign storage campaign = campaigns[_campaignId];
+
+        if (contributions[_campaignId][msg.sender] == 0) {
             campaign.contributors.push(msg.sender);
-            campaign.contributions[msg.sender] += msg.value;
+            (bool success, ) = campaign.owner.call{value: _amount}("");
+            campaign.balance += _amount;
+            contributions[_campaignId][msg.sender] += msg.value;
         }
+
+        
     }
 
     function refund(uint256 _campaignId) public {
         Campaign storage campaign = campaigns[_campaignId];
+
+        uint256 contributedAmount = contributions[_campaignId][msg.sender];
+        require(contributedAmount > 0, "You have not contributed to this campaign");
+
+        contributions[_campaignId][msg.sender] = 0;
+        campaign.balance -= contributedAmount;
         if(campaign.deadline < block.timestamp) {
             if(campaign.balance < campaign.goal) {
                 for(uint256 i = 0; i < campaign.contributors.length; i++) {
