@@ -1,7 +1,9 @@
 {
   "name": "hardhat-project",
   "devDependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
-    "hardhat": "^2.22.18"
+    "hardhat": "^2.22.18",
+    "vitest": "^3.0.5"
   }
 }
