@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-// saksham suck my dick
+// saksham suck my dick like your mom
 contract CrowdFunding {
     uint256 public totalCampaigns = 0;
 
