@@ -1,14 +1,30 @@
-"use client"
+'use client'
 
-import { useClient } from "@/hooks/useClient";
+import { useWallet } from '@/hooks/useWallet'
+import React from 'react'
 
-export default () => {
-    const client = useClient();
+const page = () => {
+  const { address, connectWallet, disconnect, isConnected } = useWallet();
 
-    return (
-        <div>
-            <h1>Wallet address</h1>
-            <button onClick={() => useClient()}>Get address</button>
-        </div>
-    );
-};
+  return (
+    <>
+      <div>
+        {
+          isConnected ?
+          <div>
+            <p>Connected with {address}</p>
+            <button onClick={() => disconnect()}>Disconnect</button>
+          </div>
+          :
+          <div>
+            <p>Not connected</p>
+          </div>
+        }
+        <button onClick={() => connectWallet()}>connect wallet</button>
+      </div>
+
+    </>
+  )
+}
+
+export default page
