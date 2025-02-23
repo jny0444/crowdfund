@@ -8,10 +8,11 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
+      fontFamily: {
+        beauty: ["Gladriel"],
+        block: ["Progress"],
+        text: ["Figtree"]
+      }
     },
   },
   plugins: [],

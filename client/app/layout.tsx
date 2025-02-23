@@ -1,7 +1,16 @@
-'use client';
+import { Metadata } from "next";
 
-import "./globals.css";
-import { Providers } from "./providers";
+import "@/styles/globals.css";
+import "@/styles/font.css";
+
+import { Providers } from "@/components/providers";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+
+export const metadata: Metadata = {
+  title: "CrowdFund",
+  description: "The crowdfunding platform on chain",
+};
 
 export default function RootLayout({
   children,
@@ -10,8 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className="antialiased selection:text-white selection:bg-purple-800">
+        <Navbar />
         <Providers>{children}</Providers>
+        <Footer />
       </body>
     </html>
   );
