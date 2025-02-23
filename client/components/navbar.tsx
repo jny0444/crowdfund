@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { Github, Wallet } from "lucide-react";
 import Link from "next/link";
+import { useWallet } from "@/hooks/useWallet";
 
 const Navbar = () => {
   const { scrollY } = useScroll();
@@ -55,6 +56,8 @@ const Navbar = () => {
     ["0 2px 4px rgba(0,0,0,0.1)", "none"]
   );
 
+  const { address, connectWallet, disconnect, isConnected } = useWallet();
+
   return (
     <motion.nav
       style={{
@@ -100,7 +103,11 @@ const Navbar = () => {
             className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-200 hover:scale-105 font-text active:scale-100"
           >
             <Wallet size={20} />
-            <span>Connect</span>
+            { isConnected ? (
+              <span onClick={() => disconnect()}>{address.slice(0, 6)}...{address.slice(-4)}</span>
+            ) : ( 
+              <span onClick={() => connectWallet()}>Connect</span>
+            )}
           </motion.button>
         </div>
       </motion.div>

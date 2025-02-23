@@ -50,7 +50,7 @@ contract CrowdFunding {
             ended: false
         });
         totalCampaigns++;
-        
+
         emit CampaignStarted(totalCampaigns - 1, msg.sender, _goal, _deadline);
     }
 
@@ -80,7 +80,7 @@ contract CrowdFunding {
             }
         }
         campaign.ended = true;
-        
+
         emit CampaignEnded(_campaignId, campaign.balance >= campaign.goal);
     }
 
@@ -99,20 +99,22 @@ contract CrowdFunding {
         }
         contributions[_campaignId][msg.sender] += _amount;
         campaign.balance += _amount;
-        
+
         emit CampaignContributed(_campaignId, msg.sender, _amount);
     }
 
-    function getAllCampaigns() public view returns(Campaign[] memory) {
+    function getAllCampaigns() public view returns (Campaign[] memory) {
         Campaign[] memory allCampaigns = new Campaign[](totalCampaigns);
-        for (uint256 i = 0; i<totalCampaigns; i++) {
+        for (uint256 i = 0; i < totalCampaigns; i++) {
             Campaign storage campaign = campaigns[i];
             allCampaigns[i] = campaign;
         }
         return allCampaigns;
     }
 
-    function getAllDonors(uint256 _campaignId) public view returns(address[] memory) {
+    function getAllDonors(
+        uint256 _campaignId
+    ) public view returns (address[] memory) {
         return contributors[_campaignId];
     }
 }
