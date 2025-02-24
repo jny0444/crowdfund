@@ -15,53 +15,54 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-neutral-100 to-neutral-200">
-      <div className="relative flex flex-col items-center justify-center min-h-screen gap-10 overflow-hidden">
-        
-        <motion.p 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-6xl md:text-7xl font-block text-center px-4"
-        >
-          The crowdfunding platform <span className="font-beauty font-bold text-[1.1em] text-purple-600 selection:text-white selection:bg-purple-700">o</span>n chain
-        </motion.p>
-        
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-xl md:text-2xl text-gray-600 font-text text-center max-w-xl px-4"
-        >
-          Revolutionizing project funding through blockchain technology and smart contracts
-        </motion.p>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="flex flex-row items-center justify-center gap-6 font-text z-10"
-        >
-          <button 
-            onClick={scrollToFeatures}
-            className="border-2 border-black px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-black hover:text-white active:scale-95 duration-200"
+    <>
+      <div className="bg-gradient-to-b from-neutral-100 to-neutral-200">
+          <div className="relative flex flex-col items-center justify-center min-h-screen gap-10 overflow-hidden">
+          
+          <motion.p 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-6xl md:text-7xl font-block text-center px-4"
           >
-            Read More
-          </button>
-          <Link href={"/projects"} className="bg-purple-600 text-white px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-purple-700 active:scale-95 duration-200">
-            Get Started
-          </Link>
-        </motion.div>
-        
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.03 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="absolute -bottom-40 text-[24rem] font-beauty select-none"
-        >
-          CrowdFund
-        </motion.div>
-      </div>
+            The crowdfunding platform <span className="font-beauty font-bold text-[1.1em] text-purple-600 selection:text-white selection:bg-purple-700">o</span>n chain
+          </motion.p>
+          
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-xl md:text-2xl text-gray-600 font-text text-center max-w-xl px-4"
+          >
+            Revolutionizing project funding through blockchain technology and smart contracts
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="flex flex-row items-center justify-center gap-6 font-text z-10"
+          >
+            <button 
+              onClick={scrollToFeatures}
+              className="border-2 border-black px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-black hover:text-white active:scale-95 duration-200"
+            >
+              Read More
+            </button>
+            <Link href={"/projects"} className="bg-purple-600 text-white px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-purple-700 active:scale-95 duration-200">
+              Get Started
+            </Link>
+          </motion.div>
+          
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.03 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="absolute -bottom-40 text-[24rem] font-beauty select-none"
+          >
+            CrowdFund
+          </motion.div>
+        </div>
 
         <div className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
           <motion.div 
@@ -164,7 +165,6 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }
