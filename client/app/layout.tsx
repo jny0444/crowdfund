@@ -20,9 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased selection:text-white selection:bg-purple-800">
-        <Navbar />
+        {/* <Navbar /> */}
         <Providers>{children}</Providers>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

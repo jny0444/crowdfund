@@ -2,30 +2,27 @@ import { useReadContract } from "wagmi";
 import { wagmiContractConfig } from "@/constants/wagmiConfig";
 
 export function useContractFunctionsRead() {
-    
-    async function getCampaigns() {
-        const { data: campaign } = useReadContract({
-            ...wagmiContractConfig,
-            functionName: "getAllCampaigns"
-        })
+  async function getCampaigns() {
+    const { data: campaign } = useReadContract({
+      ...wagmiContractConfig,
+      functionName: "getAllCampaigns",
+    });
 
-        return campaign;
-    }
+    return campaign;
+  }
 
-    async function getDonors(campaignId: number) {
-        const { data: donors } = useReadContract({
-            ...wagmiContractConfig,
-            functionName: "getAllDonors",
-            args: [campaignId]
-        })
+  async function getDonors(campaignId: number) {
+    const { data: donors } = useReadContract({
+      ...wagmiContractConfig,
+      functionName: "getAllDonors",
+      args: [campaignId],
+    });
 
-        return donors;
-    }
+    return donors;
+  }
 
-    return (
-        {
-            getCampaigns,
-            getDonors
-        }
-    )
+  return {
+    getCampaigns,
+    getDonors,
+  };
 }
