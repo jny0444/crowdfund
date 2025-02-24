@@ -46,7 +46,7 @@ export default function Home() {
           >
             Read More
           </button>
-          <Link href={"/projects"} className="bg-purple-600 text-white px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-purple-700 active:scale-95 duration-200">
+          <Link href={"/campaigns"} className="bg-purple-600 text-white px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-purple-700 active:scale-95 duration-200">
             Get Started
           </Link>
         </motion.div>

@@ -3,6 +3,7 @@
 import { motion, stagger, AnimatePresence, useMotionValue, useTransform } from "motion/react";
 import { useState, useRef, useEffect } from "react";
 import { PlusCircle, FolderOpen, Wallet, CircleDollarSign, Search, Loader2, SlidersHorizontal, X, ChevronLeft, ChevronRight } from "lucide-react";
+import CampaignModal from "@/components/campaign_modal";
 
 interface Campaign {
   id: number;
@@ -48,6 +49,7 @@ export default function Projects() {
     }
   ]);
   const filterRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -367,6 +369,7 @@ export default function Projects() {
               variants={buttonItem}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={() => setIsModalOpen(true)}
               className="px-6 py-3 rounded-lg border-2 border-black text-black font-text hover:bg-black hover:text-white transition-colors flex items-center gap-2"
             >
               <PlusCircle size={20} />
@@ -451,6 +454,10 @@ export default function Projects() {
           ))}
         </motion.div>
       </div>
+      <CampaignModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
