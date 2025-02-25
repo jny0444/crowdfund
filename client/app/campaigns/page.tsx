@@ -2,13 +2,15 @@
 
 import {
   motion,
-  stagger,
   AnimatePresence,
   useMotionValue,
-  useTransform,
 } from "motion/react";
 import { useState, useRef, useEffect } from "react";
-import { PlusCircle, FolderOpen, Wallet, CircleDollarSign, Search, Loader2, SlidersHorizontal, X, ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
+import { PlusCircle, FolderOpen, Wallet, CircleDollarSign, Search, Loader2, SlidersHorizontal, X, ChevronLeft, ChevronRight, Lightbulb, Rocket, Globe, Heart, Code, Music, Book, Camera } from "lucide-react";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import CampaignModal from "@/components/campaign_modal";
 
 interface Campaign {
   id: number;
@@ -17,6 +19,7 @@ interface Campaign {
   currentAmount: number;
   targetAmount: number;
   images: string[];
+  icon: string;
 }
 
 type FilterType = "all" | "active" | "completed" | "trending";
@@ -36,6 +39,7 @@ export default function Projects() {
       currentAmount: 0,
       targetAmount: 5,
       images: ["/placeholder1.jpg", "/placeholder2.jpg", "/placeholder3.jpg"],
+      icon: "Book"
     },
     {
       id: 2,
@@ -45,6 +49,7 @@ export default function Projects() {
       currentAmount: 0.5,
       targetAmount: 2,
       images: ["/placeholder2.jpg", "/placeholder3.jpg"],
+      icon: "Globe"
     },
     {
       id: 3,
@@ -54,6 +59,7 @@ export default function Projects() {
       currentAmount: 4,
       targetAmount: 5,
       images: ["/placeholder3.jpg", "/placeholder1.jpg", "/placeholder2.jpg"],
+      icon: "CircleDollarSign"
     },
   ]);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -284,10 +290,25 @@ export default function Projects() {
     );
   };
 
+  const getIconComponent = (iconName: string) => {
+    switch (iconName) {
+      case "CircleDollarSign": return CircleDollarSign;
+      case "Lightbulb": return Lightbulb;
+      case "Rocket": return Rocket;
+      case "Globe": return Globe;
+      case "Heart": return Heart;
+      case "Code": return Code;
+      case "Music": return Music;
+      case "Book": return Book;
+      case "Camera": return Camera;
+      default: return CircleDollarSign;
+    }
+  };
+
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-neutral-100">
+    <Navbar />
+    <div className="min-h-screen bg-neutral-100">
         <div className="max-w-7xl mx-auto px-4 md:px-8 pt-32 pb-20">
           <div className="flex justify-between items-center mb-12">
             <div className="flex items-center gap-2">
@@ -332,7 +353,9 @@ export default function Projects() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowFilters(!showFilters)}
-                  className={`p-3.5 rounded-lg duration-200 ${showFilters ? "bg-purple-700 text-white" : "bg-black/10 hover:bg-black/20"}`}
+                  className={`p-3.5 rounded-lg duration-200 ${
+                    showFilters ? "bg-purple-700 text-white" : "bg-black/10 hover:bg-black/20"
+                  }`}
                 >
                   <SlidersHorizontal size={20} />
                 </motion.button>
@@ -383,100 +406,121 @@ export default function Projects() {
               )}
             </div>
 
-          <motion.div 
-            variants={buttonContainer}
+            <motion.div
+              variants={buttonContainer}
+              initial="hidden"
+              animate="show"
+              className="flex gap-4"
+            >
+              <motion.button
+                variants={buttonItem}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-3 rounded-lg border-2 border-black text-black font-text hover:bg-black hover:text-white transition-colors flex items-center gap-2"
+              >
+                <PlusCircle size={20} />
+                Start a Campaign
+              </motion.button>
+              <motion.button
+                variants={buttonItem}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-6 py-3 rounded-lg border-2 border-black text-black font-text hover:bg-black hover:text-white transition-colors flex items-center gap-2"
+              >
+                <FolderOpen size={20} />
+                Your Campaigns
+              </motion.button>
+            </motion.div>
+          </div>
+
+          <motion.div
+            variants={container}
             initial="hidden"
             animate="show"
-            className="flex gap-4"
+            className="space-y-6"
           >
-            <motion.button
-              variants={buttonItem}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-6 py-3 rounded-lg border-2 border-black text-black font-text hover:bg-black hover:text-white transition-colors flex items-center gap-2"
-            >
-              <PlusCircle size={20} />
-              Start a Campaign
-            </motion.button>
-            <motion.button
-              variants={buttonItem}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-6 py-3 rounded-lg border-2 border-black text-black font-text hover:bg-black hover:text-white transition-colors flex items-center gap-2"
-            >
-              <FolderOpen size={20} />
-              Your Campaigns
-            </motion.button>
+            {campaigns
+              .filter(
+                (campaign) =>
+                  (searchQuery === "" ||
+                    campaign.title
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase()) ||
+                    campaign.description
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())) &&
+                  (activeFilter === "all" ||
+                    (activeFilter === "completed" &&
+                      campaign.currentAmount >= campaign.targetAmount) ||
+                    (activeFilter === "active" &&
+                      campaign.currentAmount < campaign.targetAmount) ||
+                    (activeFilter === "trending" &&
+                      campaign.currentAmount / campaign.targetAmount > 0.5))
+              )
+              .map((campaign) => (
+                <motion.div
+                  key={campaign.id}
+                  variants={item}
+                  className="bg-neutral-800 rounded-xl overflow-hidden"
+                >
+                  <ImageCarousel images={campaign.images} />
+                  <div className="p-6 space-y-6">
+                    <div className="flex items-start gap-6">
+                      <div className="h-16 w-16 bg-neutral-700 rounded-full flex-shrink-0 flex items-center justify-center">
+                        {React.createElement(getIconComponent(campaign.icon), {
+                          size: 32,
+                          className: "text-purple-500"
+                        })}
+                      </div>
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start gap-4">
+                          <div>
+                            <h3 className="text-white font-block text-2xl mb-2">
+                              {campaign.title}
+                            </h3>
+                            <p className="text-neutral-400 font-text text-lg">
+                              {campaign.description}
+                            </p>
+                          </div>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="bg-purple-600 text-white px-8 py-3 rounded-lg font-text hover:bg-purple-700 transition-colors flex items-center gap-2 text-lg"
+                          >
+                            <CircleDollarSign size={24} />
+                            Fund
+                          </motion.button>
+                        </div>
+                        <div className="mt-6">
+                          <div className="w-full bg-neutral-700 rounded-full h-3 overflow-hidden">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{
+                                width: `${
+                                  (campaign.currentAmount /
+                                    campaign.targetAmount) *
+                                  100
+                                }%`,
+                              }}
+                              transition={{ duration: 1, delay: 0.2 }}
+                              className="h-full bg-purple-600"
+                            />
+                          </div>
+                          <p className="text-white font-text mt-3 text-lg">
+                            {campaign.currentAmount} of {campaign.targetAmount} eth
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
           </motion.div>
         </div>
-
-        <motion.div 
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="space-y-6"
-        >
-          {campaigns
-            .filter(campaign => 
-              (searchQuery === "" || 
-              campaign.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              campaign.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
-              (activeFilter === "all" || 
-               (activeFilter === "completed" && campaign.currentAmount >= campaign.targetAmount) ||
-               (activeFilter === "active" && campaign.currentAmount < campaign.targetAmount) ||
-               (activeFilter === "trending" && (campaign.currentAmount / campaign.targetAmount) > 0.5))
-            )
-            .map((campaign) => (
-            <motion.div
-              key={campaign.id}
-              variants={item}
-              className="bg-neutral-800 rounded-xl overflow-hidden"
-            >
-              <ImageCarousel images={campaign.images} />
-              
-              <div className="p-6 space-y-6">
-                <div className="flex items-start gap-6">
-                  <div className="h-16 w-16 bg-neutral-700 rounded-full flex-shrink-0 flex items-center justify-center">
-                    <CircleDollarSign size={32} className="text-purple-500" />
-                  </div>
-                  
-                  <div className="flex-grow">
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <h3 className="text-white font-block text-2xl mb-2">{campaign.title}</h3>
-                        <p className="text-neutral-400 font-text text-lg">{campaign.description}</p>
-                      </div>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-purple-600 text-white px-8 py-3 rounded-lg font-text hover:bg-purple-700 transition-colors flex items-center gap-2 text-lg"
-                      >
-                        <CircleDollarSign size={24} />
-                        Fund
-                      </motion.button>
-                    </div>
-                    
-                    <div className="mt-6">
-                      <div className="w-full bg-neutral-700 rounded-full h-3 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${(campaign.currentAmount / campaign.targetAmount) * 100}%` }}
-                          transition={{ duration: 1, delay: 0.2 }}
-                          className="h-full bg-purple-600"
-                        />
-                      </div>
-                      
-                      <p className="text-white font-text mt-3 text-lg">
-                        {campaign.currentAmount} of {campaign.targetAmount} eth
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
-    </div>
+      <CampaignModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    <Footer />
+    </>
   );
 }

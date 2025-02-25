@@ -4,9 +4,12 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { Github, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useWallet } from "@/hooks/useWallet";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const { scrollY } = useScroll();
+  const router = useRouter();
   
   const backgroundColor = useTransform(
     scrollY,
@@ -58,6 +61,19 @@ const Navbar = () => {
 
   const { address, connectWallet, disconnect, isConnected } = useWallet();
 
+  const formatAddress = (addr: string | undefined): string => {
+    if (!addr) return "";
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
+
+  const handleWalletClick = async () => {
+    if (isConnected) {
+      await disconnect();
+    } else {
+      await connectWallet();
+    }
+  };
+
   return (
     <motion.nav
       style={{
@@ -100,14 +116,13 @@ const Navbar = () => {
             <span className="font-text">GitHub</span>
           </motion.a>
           <motion.button 
+            onClick={handleWalletClick}
             className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-200 hover:scale-105 font-text active:scale-100"
           >
             <Wallet size={20} />
-            { isConnected ? (
-              <span onClick={() => disconnect()}>{address.slice(0, 6)}...{address.slice(-4)}</span>
-            ) : ( 
-              <span onClick={() => connectWallet()}>Connect</span>
-            )}
+            <span>
+              {isConnected ? formatAddress(address) : "Connect"}
+            </span>
           </motion.button>
         </div>
       </motion.div>

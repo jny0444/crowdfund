@@ -2,11 +2,37 @@
 
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
+import TransitionOverlay from "@/components/transition-overlay";
 import { FastForward, Globe, Shield } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useWallet } from "@/hooks/useWallet";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const { isConnected } = useWallet();
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  useEffect(() => {
+    // Only redirect if this is the first connection
+    if (isConnected && !isRedirecting && !localStorage.getItem("walletConnected")) {
+      setIsRedirecting(true);
+      localStorage.setItem("walletConnected", "true");
+      setTimeout(() => {
+        router.push("/campaigns");
+      }, 1500);
+    }
+  }, [isConnected, router, isRedirecting]);
+
+  // Clear the localStorage item when wallet disconnects
+  useEffect(() => {
+    if (!isConnected) {
+      localStorage.removeItem("walletConnected");
+    }
+  }, [isConnected]);
+
   const scrollToFeatures = () => {
     window.scrollTo({
       top: window.innerHeight - 100,
@@ -16,6 +42,11 @@ export default function Home() {
 
   return (
     <>
+      <TransitionOverlay 
+        isVisible={isRedirecting} 
+        message="Redirecting to campaigns..."
+      />
+      <Navbar />
       <div className="bg-gradient-to-b from-neutral-100 to-neutral-200">
           <div className="relative flex flex-col items-center justify-center min-h-screen gap-10 overflow-hidden">
           
@@ -49,7 +80,7 @@ export default function Home() {
             >
               Read More
             </button>
-            <Link href={"/projects"} className="bg-purple-600 text-white px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-purple-700 active:scale-95 duration-200">
+            <Link href={"/campaigns"} className="bg-purple-600 text-white px-8 py-3 text-xl rounded-lg hover:rounded-xl hover:shadow-2xl hover:bg-purple-700 active:scale-95 duration-200">
               Get Started
             </Link>
           </motion.div>
@@ -165,6 +196,7 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
